@@ -52,7 +52,7 @@
       path: //opt/jfrog/artifactory/var/etc/system.yaml
       regexp: '^shared: '
       insertafter: '^shared: '
-      line: extraJavaOpts: "-Xms512m -Xmx1g"
+      line: "extraJavaOpts: -server -Xms512m -Xmx1g -Xss256k -XX:+UseG1GC"
      
 
   - name : Install Artifactory as a service
