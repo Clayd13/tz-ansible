@@ -1,7 +1,6 @@
 --- 
 - name: install artifactory 
   hosts: all
-  connection: local
   become: yes
   
   tasks: 
@@ -46,6 +45,15 @@
       owner: artifactory
       group: artifactory
       recurse: yes
+      
+      
+  - name: add java heap size cfg
+    lineinfile:
+      path: //opt/jfrog/artifactory/var/etc/system.yaml
+      regexp: '^shared: '
+      insertafter: '^shared: '
+      line: extraJavaOpts: "-Xms512m -Xmx1g"
+     
 
   - name : Install Artifactory as a service
     shell: /opt/jfrog/artifactory/app/bin/installService.sh
