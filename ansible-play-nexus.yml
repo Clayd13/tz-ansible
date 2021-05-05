@@ -48,16 +48,21 @@
        
   - name: Configure nexus to run as nexus user
     replace:
+      path: "/opt/nexus/nexus/bin/"nexus.vmoptions
+      regexp: '2703m'
+      replace: '1200m'
+   
+  - name: Configure java heap size to run nexus
+    replace:
       path: "/opt/nexus/nexus/bin/nexus.rc"
       regexp: '#run_as_user=""'
       replace: 'run_as_user="nexus"'
-   
+        
   - name: Copy the nexus service configuration file
     template:
      src: "/etc/ansible/nexus.service"
      dest: "/etc/systemd/system/nexus.service"
-     owner: nexus
-     group: nexus     
+          
      
   - name: Enable the nexus service
     systemd:
