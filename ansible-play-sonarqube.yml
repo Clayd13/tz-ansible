@@ -43,7 +43,7 @@
   - name: add java heap size cfg
     lineinfile:
       path: /opt/sonarqube/conf/sonar.properties
-      line: sonar.web.javaOpts=-Xmx256m -Xms128m
+      line: sonar.ce.javaOpts=-Xmx256m -Xms128m 
       create: yes
     
   - name: add java heap size cfg
