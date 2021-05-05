@@ -1,0 +1,67 @@
+---
+- name: install nexus
+  hosts: all
+  become: yes
+  
+  tasks:
+    
+  - name: Create dedicated user for running the nexus
+    user:
+      name: nexus
+      groups:
+      comment: System user for running nexus
+ 
+  - name: Create dir
+    file: 
+      path: /opt/nexus
+      state: directory
+      owner: nexus
+      group: nexus
+ 
+  - name: downloading nexus
+    get_url:
+      url: https://sonatype-download.global.ssl.fastly.net/nexus/3/nexus-3.30.1-01-unix.tar.gz
+      dest: "/tmp/nexus-3.30.1-01-unix.tar.gz"
+      owner: nexus
+      group: nexus
+ 
+  - name: Untar nexus
+    unarchive:
+      src: "/tmp/nexus-3.30.1-01-unix.tar.gz"
+      dest: "/opt/"
+      copy: no
+      owner: nexus
+      group: nexus
+      
+  - name: Link 
+    file:
+      src: "/opt/nexus-3.30.1-01"
+      dest: "/opt/nexus"
+      state: link
+      
+  - name: chown owner
+    file:
+      dest: "/opt/sonatype-work"
+      owner: nexus
+      group: nexus 
+      recurse: yes
+       
+  - name: Configure nexus to run as nexus user
+    replace:
+      path: "/opt/nexus/bin/nexus.rc"
+      regexp: '#run_as_user=""'
+      replace: 'run_as_user="nexus"'
+   
+  - name: Copy the nexus service configuration file
+    template:
+     src: "/etc/ansible/nexus.service"
+     dest: "/etc/systemd/system/nexus.service"
+     owner: nexus
+     group: nexus     
+     
+  - name: Enable the nexus service
+    systemd:
+     state: started
+     enabled: yes
+     daemon_reload: yes
+     name: nexus

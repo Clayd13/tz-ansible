@@ -1,0 +1,65 @@
+--- 
+- name: install artifactory 
+  hosts: all
+  connection: local
+  become: yes
+  
+  tasks: 
+      
+  - name: Create dedicated user for running the artifactory
+    user:
+      name: artifactory 
+      groups:
+      comment: System user for running artifactory
+ 
+  - name: Create dir
+    file: 
+      path: /opt/jfrog
+      state: directory
+      owner: artifactory 
+      group: artifactory 
+
+  - name: downloading artifactory
+    get_url:
+      url: https://releases.jfrog.io/artifactory/bintray-artifactory/org/artifactory/oss/jfrog-artifactory-oss/7.9.2/jfrog-artifactory-oss-7.9.2-linux.tar.gz
+      dest: "/tmp/jfrog-artifactory-oss-7.9.2-linux.tar.gz"
+      owner: artifactory 
+      group: artifactory       
+ 
+  - name: Untar artifactory 
+    unarchive:
+      src: "/tmp/jfrog-artifactory-oss-7.9.2-linux.tar.gz"
+      dest: "/opt/jfrog"
+      copy: no
+      owner: artifactory 
+      group: artifactory 
+
+  - name: Link
+    file:
+      src: "/opt/jfrog/artifactory-oss-7.9.2"
+      dest: "/opt/jfrog/artifactory"
+      state: link
+
+  - name: chown owner
+    file:
+      dest: "/opt/jfrog"
+      owner: artifactory
+      group: artifactory
+      recurse: yes
+
+  - name : Install Artifactory as a service
+    shell: /opt/jfrog/artifactory/app/bin/installService.sh
+    
+  - name: Change file permissions
+    file:
+      path: /usr/lib/systemd/system/artifactory.service
+      owner: artifactory
+      group: artifactory
+      mode: '0644'
+      
+  - name: Enable the Artifactory service
+    systemd:
+      state: started
+      enabled: yes
+      daemon_reload: yes
+      name: artifactory

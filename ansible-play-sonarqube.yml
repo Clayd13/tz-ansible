@@ -1,0 +1,79 @@
+---
+- name: install sonar and connect to rds
+  hosts: all
+  become: yes
+  
+  tasks:
+        
+  - name: Create dedicated user for running the Sonarqube
+    user:
+      name: sonar
+      groups:
+      comment: System user for running Sonarqube
+ 
+  - name: Create dir
+    file: 
+      path: /opt/sonarq
+      state: directory
+      owner: sonar
+
+  - name: downloading Sonarqube
+    get_url:
+      url: "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.8.0.42792.zip"
+      dest: "/tmp/sonarqube-8.8.0.42792.zip"
+      checksum: "md5:44fe1435ded3b77e755b0b5373acbe7c"
+      owner: sonar
+ 
+  
+  - name: Unzip Sonarqube
+    unarchive:
+      src: "/tmp/sonarqube-8.8.0.42792.zip"
+      dest: "/opt/sonarq/"
+      copy: no
+      owner: sonar
+ 
+  - name: Link 
+    file:
+      src: "/opt/sonarq/sonarqube-8.8.0.42792"
+      dest: "/opt/sonarqube"
+      state: link
+      owner: sonar 
+    
+  - name: Configure Sonarqube to run as sonar user
+    replace:
+      path: "/opt/sonarqube/bin/linux-x86-64/sonar.sh"
+      regexp: "RUN_AS_USER="
+      replace: "RUN_AS_USER=sonar"
+    
+  - name: Configure Sonarqube DB username
+    replace:
+      path: "/opt/sonarqube/conf/sonar.properties"
+      regexp: "#sonar.jdbc.username="
+      replace: "sonar.jdbc.username=sonar-db-user"
+    
+
+  - name: Configure Sonarqube DB password
+    replace:
+      path: "/opt/sonarqube/conf/sonar.properties"
+      regexp: "#sonar.jdbc.password="
+      replace: "sonar.jdbc.password={{sonnardbpassword}}"
+ 
+  - name: Configure Sonarqube DB connection string
+    replace:
+      path: "/opt/sonarqube/conf/sonar.properties"
+      regexp: "sonar.jdbc.url=jdbc:postgresql://localhost/sonar"
+      replace: "#sonar.jdbc.url=jdbc:postgresql://{{sonnardbip}}/sonardb"
+    
+    
+  - name: Copy the SonarQube service configuration file
+    template:
+      src: "/etc/ansible/sonarqube.service"
+      dest: "/etc/systemd/system/sonarqube.service"
+      owner: sonar
+
+  - name: Enable the SonarQube service
+    systemd:
+      state: started
+      enabled: yes
+      daemon_reload: yes
+      name: sonarqube
