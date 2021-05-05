@@ -48,7 +48,7 @@
        
   - name: Configure nexus to run as nexus user
     replace:
-      path: "/opt/nexus/nexus/bin/"nexus.vmoptions
+      path: "/opt/nexus/nexus/bin/nexus.vmoptions"
       regexp: '2703m'
       replace: '1200m'
    
