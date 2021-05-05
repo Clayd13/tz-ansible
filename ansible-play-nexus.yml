@@ -28,27 +28,27 @@
   - name: Untar nexus
     unarchive:
       src: "/tmp/nexus-3.30.1-01-unix.tar.gz"
-      dest: "/opt/"
+      dest: "/opt/nexus"
       copy: no
       owner: nexus
       group: nexus
       
   - name: Link 
     file:
-      src: "/opt/nexus-3.30.1-01"
-      dest: "/opt/nexus"
+      src: "/opt/nexus/nexus-3.30.1-01"
+      dest: "/opt/nexus/nexus"
       state: link
       
   - name: chown owner
     file:
-      dest: "/opt/sonatype-work"
+      dest: "/opt/nexus/"
       owner: nexus
       group: nexus 
       recurse: yes
        
   - name: Configure nexus to run as nexus user
     replace:
-      path: "/opt/nexus/bin/nexus.rc"
+      path: "/opt/nexus/nexus/bin/nexus.rc"
       regexp: '#run_as_user=""'
       replace: 'run_as_user="nexus"'
    
