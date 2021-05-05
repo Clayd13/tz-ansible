@@ -16,6 +16,7 @@
       path: /opt/sonarq
       state: directory
       owner: sonar
+      group: sonar
 
   - name: downloading Sonarqube
     get_url:
@@ -23,7 +24,7 @@
       dest: "/tmp/sonarqube-8.8.0.42792.zip"
       checksum: "md5:44fe1435ded3b77e755b0b5373acbe7c"
       owner: sonar
- 
+      group: sonar
   
   - name: Unzip Sonarqube
     unarchive:
@@ -31,14 +32,38 @@
       dest: "/opt/sonarq/"
       copy: no
       owner: sonar
- 
+      group: sonar
+      
   - name: Link 
     file:
       src: "/opt/sonarq/sonarqube-8.8.0.42792"
       dest: "/opt/sonarqube"
       state: link
-      owner: sonar 
+                     
+  - name: add java heap size cfg
+    lineinfile:
+      path: /opt/sonarqube/conf/sonar.properties
+      line: sonar.web.javaOpts=-Xmx256m -Xms128m
+      create: yes
     
+  - name: add java heap size cfg
+    lineinfile:
+      path: /opt/sonarqube/conf/sonar.properties
+      line: sonar.web.javaOpts=-Xmx128m -Xms64m
+      create: yes  
+    
+  - name: add java heap size cfg
+    lineinfile:
+      path: /opt/sonarqube/conf/sonar.properties
+      line: sonar.search.javaOpts=-Xmx256m -Xms128m
+      create: yes
+    
+  - name: add java heap size cfg
+    lineinfile:
+      path: /opt/sonarqube/conf/sonar.properties
+      line: sonar.telemetry.enable=false
+      create: yes
+     
   - name: Configure Sonarqube to run as sonar user
     replace:
       path: "/opt/sonarqube/bin/linux-x86-64/sonar.sh"
@@ -69,8 +94,7 @@
     template:
       src: "/etc/ansible/sonarqube.service"
       dest: "/etc/systemd/system/sonarqube.service"
-      owner: sonar
-
+      
   - name: Enable the SonarQube service
     systemd:
       state: started
