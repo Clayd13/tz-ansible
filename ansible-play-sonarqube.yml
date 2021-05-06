@@ -70,7 +70,25 @@
       regexp: '^#sonar.jdbc.url=jdbc:postgresql://localhost/sonar '
       insertafter: '^#sonar.jdbc.url=jdbc:postgresql://localhost/sonar '
       line: "sonar.jdbc.url=jdbc:postgresql://{{sonardbip}}/sonardb"
+ 
+  - name: add java heap size cfg
+    lineinfile:
+     path: /opt/sonarqube/conf/sonar.properties
+      line: sonar.search.javaOpts=-Xmx512m -Xms256m -XX:MaxDirectMemorySize=256m -XX:+HeapDumpOnOutOfMemoryError 
+      create: yes
     
+  - name: add java web heap size cfg
+    lineinfile:
+      path: /opt/sonarqube/conf/sonar.properties
+      line: sonar.web.javaOpts=-Xmx256m -Xms128m -XX:+HeapDumpOnOutOfMemoryError
+      create: yes  
+    
+  - name: add java ce heap size cfg
+    lineinfile:
+      path: /opt/sonarqube/conf/sonar.properties
+      line: sonar.ce.javaOpts=-Xmx512m -Xms128m -XX:+HeapDumpOnOutOfMemoryError
+      create: yes 
+      
   - name: Copy the SonarQube service configuration file
     template:
       src: "/etc/ansible/sonarqube.service"
