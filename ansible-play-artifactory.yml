@@ -37,14 +37,7 @@
     file:
       src: "/opt/jfrog/artifactory-oss-7.9.2"
       dest: "/opt/jfrog/artifactory"
-      state: link
-
-  - name: chown owner
-    file:
-      dest: "/opt/jfrog"
-      owner: artifactory
-      group: artifactory
-      recurse: yes  
+      state: link 
 
   - name : Install Artifactory as a service
     shell: /opt/jfrog/artifactory/app/bin/installService.sh
@@ -62,6 +55,13 @@
       regexp: '^shared: '
       insertafter: '^shared: '
       line: "extraJavaOpts: -server -Xms512m -Xmx1g -Xss256k -XX:+UseG1GC"
+
+  - name: chown owner
+    file:
+      dest: "/opt/jfrog"
+      owner: artifactory
+      group: artifactory
+      recurse: yes
 
   - name: Enable the Artifactory service
     systemd:
