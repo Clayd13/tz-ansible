@@ -68,7 +68,7 @@
     replace:
       path: "/opt/sonarqube/conf/sonar.properties"
       regexp: "#sonar.jdbc.url=jdbc:postgresql://localhost/sonar"
-      replace: "sonar.jdbc.url=jdbc:postgresql://{{sonnardbip}}/sonardb"
+      replace: "sonar.jdbc.url=jdbc:postgresql://{{sonardbip}}/sonardb"
     
     
   - name: Copy the SonarQube service configuration file
