@@ -39,25 +39,7 @@
       src: "/opt/sonarq/sonarqube-8.8.0.42792"
       dest: "/opt/sonarqube"
       state: link
-                     
-  - name: add java heap size cfg
-    lineinfile:
-      path: /opt/sonarqube/conf/sonar.properties
-      line: sonar.ce.javaOpts=-Xmx376m -Xms128m 
-      create: yes
-    
-  - name: add java heap size cfg
-    lineinfile:
-      path: /opt/sonarqube/conf/sonar.properties
-      line: sonar.web.javaOpts=-Xmx376m -Xms256m
-      create: yes  
-    
-  - name: add java heap size cfg
-    lineinfile:
-      path: /opt/sonarqube/conf/sonar.properties
-      line: sonar.search.javaOpts=-Xmx376m -Xms128m
-      create: yes
-    
+                       
   - name: add java heap size cfg
     lineinfile:
       path: /opt/sonarqube/conf/sonar.properties
@@ -74,8 +56,7 @@
     replace:
       path: "/opt/sonarqube/conf/sonar.properties"
       regexp: "#sonar.jdbc.username="
-      replace: "sonar.jdbc.username=sonar-db-user"
-    
+      replace: "sonar.jdbc.username=sonar-db-user"   
 
   - name: Configure Sonarqube DB password
     replace:
