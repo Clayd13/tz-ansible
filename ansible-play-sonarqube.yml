@@ -56,7 +56,7 @@
     replace:
       path: "/opt/sonarqube/conf/sonar.properties"
       regexp: "#sonar.jdbc.username="
-      replace: "sonar.jdbc.username=sonar-db-user"   
+      replace: "sonar.jdbc.username=sonar"   
 
   - name: Configure Sonarqube DB password
     replace:
