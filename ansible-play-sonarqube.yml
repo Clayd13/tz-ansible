@@ -43,19 +43,19 @@
   - name: add java heap size cfg
     lineinfile:
       path: /opt/sonarqube/conf/sonar.properties
-      line: sonar.ce.javaOpts=-Xmx256m -Xms128m 
+      line: sonar.ce.javaOpts=-Xmx376m -Xms128m 
       create: yes
     
   - name: add java heap size cfg
     lineinfile:
       path: /opt/sonarqube/conf/sonar.properties
-      line: sonar.web.javaOpts=-Xmx128m -Xms64m
+      line: sonar.web.javaOpts=-Xmx376m -Xms256m
       create: yes  
     
   - name: add java heap size cfg
     lineinfile:
       path: /opt/sonarqube/conf/sonar.properties
-      line: sonar.search.javaOpts=-Xmx256m -Xms128m
+      line: sonar.search.javaOpts=-Xmx376m -Xms128m
       create: yes
     
   - name: add java heap size cfg
@@ -86,8 +86,8 @@
   - name: Configure Sonarqube DB connection string
     replace:
       path: "/opt/sonarqube/conf/sonar.properties"
-      regexp: "sonar.jdbc.url=jdbc:postgresql://localhost/sonar"
-      replace: "#sonar.jdbc.url=jdbc:postgresql://{{sonnardbip}}/sonardb"
+      regexp: "#sonar.jdbc.url=jdbc:postgresql://localhost/sonar"
+      replace: "sonar.jdbc.url=jdbc:postgresql://{{sonnardbip}}/sonardb"
     
     
   - name: Copy the SonarQube service configuration file
