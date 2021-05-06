@@ -44,16 +44,7 @@
       dest: "/opt/jfrog"
       owner: artifactory
       group: artifactory
-      recurse: yes
-      
-      
-  - name: add java heap size cfg
-    lineinfile:
-      path: /opt/jfrog/artifactory/var/etc/system.yaml
-      regexp: '^shared: '
-      insertafter: '^shared: '
-      line: "extraJavaOpts: -server -Xms512m -Xmx1g -Xss256k -XX:+UseG1GC"
-     
+      recurse: yes  
 
   - name : Install Artifactory as a service
     shell: /opt/jfrog/artifactory/app/bin/installService.sh
@@ -64,7 +55,14 @@
       owner: artifactory
       group: artifactory
       mode: '0644'
-      
+    
+  - name: add java heap size cfg
+    lineinfile:
+      path: /opt/jfrog/artifactory/var/etc/system.yaml
+      regexp: '^shared: '
+      insertafter: '^shared: '
+      line: "extraJavaOpts: -server -Xms512m -Xmx1g -Xss256k -XX:+UseG1GC"
+
   - name: Enable the Artifactory service
     systemd:
       state: started
