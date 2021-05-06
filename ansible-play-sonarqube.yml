@@ -73,7 +73,7 @@
  
   - name: add java heap size cfg
     lineinfile:
-     path: /opt/sonarqube/conf/sonar.properties
+      path: /opt/sonarqube/conf/sonar.properties
       line: sonar.search.javaOpts=-Xmx512m -Xms256m -XX:MaxDirectMemorySize=256m -XX:+HeapDumpOnOutOfMemoryError 
       create: yes
     
