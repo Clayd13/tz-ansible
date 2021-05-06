@@ -62,7 +62,7 @@
     replace:
       path: "/opt/sonarqube/conf/sonar.properties"
       regexp: "#sonar.jdbc.password="
-      replace: "sonar.jdbc.password={{sonnardbpassword}}"
+      replace: "sonar.jdbc.password={{sonardbpassword}}"
  
   - name: Configure Sonarqube DB connection string
     replace:
