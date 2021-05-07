@@ -46,13 +46,13 @@
       group: nexus 
       recurse: yes
        
-  - name: Configure nexus to run as nexus user
+  - name: Configure java heap
     replace:
       path: "/opt/nexus/nexus/bin/nexus.vmoptions"
       regexp: '2703m'
       replace: '1200m'
    
-  - name: Configure java heap size to run nexus
+  - name: Configure to run nexus
     replace:
       path: "/opt/nexus/nexus/bin/nexus.rc"
       regexp: '#run_as_user=""'
